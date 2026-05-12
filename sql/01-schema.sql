@@ -4,8 +4,8 @@
 -- 인코딩: utf8mb4 (한글 컬럼·식별자 지원)
 --
 -- 출처: docs/03-3차과제-릴레이션스키마.pdf (11-1주차 매핑 강의 정정본 반영)
--- 정정 사상: 카테고리 정규화, 사원 자기참조 + 다중값 분리, 수립 fat 정규화,
---           발생일/수립일 관계 속성, 키 네이밍 통일
+-- 정정 사상: 카테고리 정규화, 사원 자기참조, 조직 전화번호 다중값 분리,
+--           수립 fat 정규화, 발생일/수립일 관계 속성, 키 네이밍 통일
 -- ============================================================================
 
 DROP DATABASE IF EXISTS fmds;
@@ -19,7 +19,6 @@ USE fmds;
 CREATE TABLE `조직` (
 	`조직명`         VARCHAR(50)  NOT NULL,
 	`조직종류`       VARCHAR(20)  NOT NULL COMMENT '부서/팀/본부 등',
-	`조직전화번호`   VARCHAR(20),
 	`조직책임자`     VARCHAR(50),
 	PRIMARY KEY (`조직명`)
 ) ENGINE=InnoDB;
@@ -66,15 +65,16 @@ CREATE TABLE `사원` (
 ) ENGINE=InnoDB;
 
 -- ─────────────────────────────────────────────────────────────────────────────
--- 5. 사원_전화번호 (다중값 속성 분리)
---    사원당 N개 연락처 허용. 사원 PK + 전화번호 자체를 결합 PK로.
+-- 5. 조직_전화번호 (다중값 속성 분리)
+--    조직(부서)당 N개 대표 연락처 허용 (대표/직통/팩스 등).
+--    조직 PK + 전화번호 자체를 결합 PK로.
 -- ─────────────────────────────────────────────────────────────────────────────
-CREATE TABLE `사원_전화번호` (
-	`사원ID`         INT          NOT NULL,
+CREATE TABLE `조직_전화번호` (
+	`조직명`         VARCHAR(50)  NOT NULL,
 	`전화번호`       VARCHAR(20)  NOT NULL,
-	`종류`           VARCHAR(20)  COMMENT '회사/휴대/집 등',
-	PRIMARY KEY (`사원ID`, `전화번호`),
-	FOREIGN KEY (`사원ID`) REFERENCES `사원`(`사원ID`)
+	`종류`           VARCHAR(20)  COMMENT '대표/직통/팩스 등',
+	PRIMARY KEY (`조직명`, `전화번호`),
+	FOREIGN KEY (`조직명`) REFERENCES `조직`(`조직명`)
 		ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
