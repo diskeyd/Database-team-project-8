@@ -26,17 +26,17 @@
 
 ## 데이터 모델 (정정본)
 
-10개 테이블 + 11개 FK 로 구성. 11-1주차 매핑 강의 + 6-1주차 피드백 반영:
+10개 테이블 + 11개 외래키로 구성. 11-1주차 매핑 강의 + 6-1주차 피드백 반영:
 
 | 테이블 | 역할 | 비고 |
 |---|---|---|
 | 조직 | 부서·팀 단위 (상위 컨테이너) | |
 | 카테고리 | 거래·예산 분류 마스터 | 정규화 분리 |
-| 사원 | 조직 소속 구성원 | 자기참조 FK (상사ID) |
+| 사원 | 조직 소속 구성원 | 자기참조 외래키 (상사ID) |
 | 조직_전화번호 | 조직(부서)당 N개 대표 연락처 (대표/직통/팩스) | 다중값 속성 분리 |
 | 계좌 | 조직 소유 계좌 | 약한 개체 (소유 식별) |
 | 목표 | 조직별 목표 | |
-| 예산 | 조직별·카테고리별 예산 | 기준 관계 FK |
+| 예산 | 조직별·카테고리별 예산 | 기준 관계 외래키 |
 | 거래내역 | 계좌 기준 수입·지출 | 발생일 관계 속성 |
 | 설정 | 조직 ↔ 목표 (N:M) | 관계 릴레이션 |
 | 수립 | 조직 ↔ 예산 (N:M) | 관계 릴레이션 + 수립일 |
@@ -67,7 +67,7 @@ MySQL 8.x / MariaDB 10.x 기반. 자세한 실행 방법은 [`sql/README.md`](sq
 
 | 파일 | 내용 |
 |---|---|
-| [`sql/01-schema.sql`](sql/01-schema.sql) | 테이블 10개 DDL, FK 11개·CHECK·INDEX |
+| [`sql/01-schema.sql`](sql/01-schema.sql) | 테이블 10개 DDL, 외래키 11개·CHECK·INDEX |
 | [`sql/02-sample-data.sql`](sql/02-sample-data.sql) | 시연용 INSERT (조직 3, 카테고리 14, 사원 8 + 자기참조, 조직_전화번호 8, 계좌 6, 목표 4, 예산 6, 거래 29, 설정 5, 수립 6) |
 | [`sql/03-queries.sql`](sql/03-queries.sql) | 역할별 4개 시나리오 + 자기참조·다중값·기준 관계 활용 쿼리 |
 | [`sql/04-views-grants.sql`](sql/04-views-grants.sql) | VIEW 3개 + 역할별 USER + GRANT |
@@ -88,7 +88,7 @@ MySQL 8.x / MariaDB 10.x 기반. 자세한 실행 방법은 [`sql/README.md`](sq
 │   └── fmds.dbml.md                         # 초기 DBML (1차 히스토리)
 └── sql/
     ├── README.md                            # SQL 실행 가이드 + 정정 사항
-    ├── 01-schema.sql                        # DDL (10테이블/11FK)
+    ├── 01-schema.sql                        # DDL (10테이블/11외래키)
     ├── 02-sample-data.sql                   # 샘플 데이터 INSERT
     ├── 03-queries.sql                       # 역할별 DML + 분석
     ├── 04-views-grants.sql                  # VIEW + GRANT
