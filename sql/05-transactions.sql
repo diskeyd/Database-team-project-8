@@ -1,6 +1,8 @@
 -- ============================================================================
 -- FMDS — 05. Transactions & Concurrency
 -- 1차 요구사항: "동시 접근 시 데이터 정합성 보장(트랜잭션)" 시연
+-- 정정 사상 반영: 컬럼명 동기화 (발생일·계좌ID·카테고리ID), 카테고리 ID 정수 매핑.
+--   카테고리 ID 참조: 이체=14, 사무용품=3 (02-sample-data 순서 기준)
 -- ============================================================================
 
 USE fmds;
@@ -11,33 +13,33 @@ USE fmds;
 -- ============================================================================
 
 -- 이체 전 잔액 확인
-SELECT `계좌_ID`, `계좌명`, `잔액` FROM `계좌` WHERE `계좌_ID` IN (1, 2);
+SELECT `계좌ID`, `계좌명`, `잔액` FROM `계좌` WHERE `계좌ID` IN (1, 2);
 
 START TRANSACTION;
 
 -- 출금
 UPDATE `계좌`
    SET `잔액` = `잔액` - 200000
- WHERE `계좌_ID` = 1;
+ WHERE `계좌ID` = 1;
 
--- 출금 거래 기록
-INSERT INTO `거래내역` (`금액`, `카테고리`, `메모`, `거래일`, `계좌_ID`)
-VALUES (-200000.00, '이체', '예비계좌로 이체', CURDATE(), 1);
+-- 출금 거래 기록 (이체 카테고리 ID = 14)
+INSERT INTO `거래내역` (`금액`, `메모`, `발생일`, `계좌ID`, `카테고리ID`)
+VALUES (-200000.00, '예비계좌로 이체', CURDATE(), 1, 14);
 
 -- 입금
 UPDATE `계좌`
    SET `잔액` = `잔액` + 200000
- WHERE `계좌_ID` = 2;
+ WHERE `계좌ID` = 2;
 
 -- 입금 거래 기록
-INSERT INTO `거래내역` (`금액`, `카테고리`, `메모`, `거래일`, `계좌_ID`)
-VALUES (200000.00, '이체', '운영계좌에서 이체', CURDATE(), 2);
+INSERT INTO `거래내역` (`금액`, `메모`, `발생일`, `계좌ID`, `카테고리ID`)
+VALUES (200000.00, '운영계좌에서 이체', CURDATE(), 2, 14);
 
 COMMIT;
 -- 만약 중간에 에러 발생 시 ROLLBACK;
 
 -- 이체 후 잔액 (운영 -200,000 / 예비 +200,000, 합계는 동일)
-SELECT `계좌_ID`, `계좌명`, `잔액` FROM `계좌` WHERE `계좌_ID` IN (1, 2);
+SELECT `계좌ID`, `계좌명`, `잔액` FROM `계좌` WHERE `계좌ID` IN (1, 2);
 
 
 -- ============================================================================
@@ -49,17 +51,17 @@ START TRANSACTION;
 -- 잔액 5천만원짜리 출금 시도 (실패 시나리오)
 UPDATE `계좌`
    SET `잔액` = `잔액` - 50000000
- WHERE `계좌_ID` = 2;
+ WHERE `계좌ID` = 2;
 
 -- 체크: 잔액이 음수가 됐는지 확인
 -- (CHECK 제약 `chk_계좌_잔액` 위반으로 InnoDB가 거부함)
 -- 명시적으로 검증 후 롤백:
-SELECT `잔액` FROM `계좌` WHERE `계좌_ID` = 2;
+SELECT `잔액` FROM `계좌` WHERE `계좌ID` = 2;
 
 ROLLBACK;
 
 -- 잔액 복원 확인
-SELECT `계좌_ID`, `계좌명`, `잔액` FROM `계좌` WHERE `계좌_ID` = 2;
+SELECT `계좌ID`, `계좌명`, `잔액` FROM `계좌` WHERE `계좌ID` = 2;
 
 
 -- ============================================================================
@@ -70,18 +72,19 @@ SELECT `계좌_ID`, `계좌명`, `잔액` FROM `계좌` WHERE `계좌_ID` = 2;
 -- 세션 A에서 실행 (다른 세션은 잠금 해제 시까지 대기)
 START TRANSACTION;
 
-SELECT `계좌_ID`, `잔액`
+SELECT `계좌ID`, `잔액`
   FROM `계좌`
- WHERE `계좌_ID` = 3
+ WHERE `계좌ID` = 3
    FOR UPDATE;        -- ← 이 행에 배타적 락(X-lock) 획득
 
 -- 잔액 검증 후 업데이트
 UPDATE `계좌`
    SET `잔액` = `잔액` - 100000
- WHERE `계좌_ID` = 3;
+ WHERE `계좌ID` = 3;
 
-INSERT INTO `거래내역` (`금액`, `카테고리`, `메모`, `거래일`, `계좌_ID`)
-VALUES (-100000.00, '사무용품', '동시성 시연용', CURDATE(), 3);
+-- 사무용품 카테고리 ID = 3
+INSERT INTO `거래내역` (`금액`, `메모`, `발생일`, `계좌ID`, `카테고리ID`)
+VALUES (-100000.00, '동시성 시연용', CURDATE(), 3, 3);
 
 COMMIT;  -- ← 락 해제
 
@@ -97,8 +100,8 @@ SELECT @@TRANSACTION_ISOLATION;
 SET SESSION TRANSACTION ISOLATION LEVEL SERIALIZABLE;
 
 START TRANSACTION;
-SELECT SUM(`금액`) AS 총합 FROM `거래내역` WHERE `계좌_ID` = 1;
--- 이 트랜잭션이 끝날 때까지 다른 세션은 계좌_ID=1 거래 INSERT 불가
+SELECT SUM(`금액`) AS 총합 FROM `거래내역` WHERE `계좌ID` = 1;
+-- 이 트랜잭션이 끝날 때까지 다른 세션은 계좌ID=1 거래 INSERT 불가
 COMMIT;
 
 -- 격리 수준 복원
@@ -124,5 +127,5 @@ END //
 DELIMITER ;
 
 -- 트리거 동작 테스트 (실패해야 정상)
--- UPDATE `계좌` SET `잔액` = -1 WHERE `계좌_ID` = 1;
+-- UPDATE `계좌` SET `잔액` = -1 WHERE `계좌ID` = 1;
 -- → ERROR 1644 (45000): 잔액은 0 이상이어야 합니다
