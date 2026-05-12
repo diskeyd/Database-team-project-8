@@ -54,7 +54,6 @@ CREATE TABLE `목표` (
 CREATE TABLE `사원` (
 	`사원ID`         INT          NOT NULL AUTO_INCREMENT,
 	`사원명`         VARCHAR(50)  NOT NULL,
-	`사원성별`       CHAR(1)      COMMENT 'M/F',
 	`조직명`         VARCHAR(50)  NOT NULL,
 	`상사ID`         INT          NULL COMMENT '직속 상사. 부장(최상위)은 NULL',
 	PRIMARY KEY (`사원ID`),
