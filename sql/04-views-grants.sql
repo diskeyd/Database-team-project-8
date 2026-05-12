@@ -83,7 +83,7 @@ CREATE USER '부서장'@'localhost' IDENTIFIED BY 'DemoMgr!2026';
 -- 3. 권한 부여 (GRANT)
 -- ============================================================================
 
--- 【회계자】 거래내역 등록·수정 + 카테고리/계좌 조회 (FK 매핑·잔액 확인용)
+-- 【회계자】 거래내역 등록·수정 + 카테고리/계좌 조회 (외래키 매핑·잔액 확인용)
 GRANT SELECT, INSERT, UPDATE ON `fmds`.`거래내역`   TO '회계자'@'localhost';
 GRANT SELECT                  ON `fmds`.`카테고리`   TO '회계자'@'localhost';
 GRANT SELECT                  ON `fmds`.`계좌`       TO '회계자'@'localhost';
