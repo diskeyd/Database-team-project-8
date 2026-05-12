@@ -1,6 +1,8 @@
 -- ============================================================================
 -- FMDS — 03. Core DML Queries
 -- 1차 요구사항 4개 역할별 시나리오 대응.
+-- 정정 사상 반영: 카테고리 JOIN, 발생일 단일화, 수립 fat 제거(예산·조직 JOIN),
+--                 키 네이밍 통일, 자기참조·다중값·기준관계 활용 쿼리 추가.
 -- ============================================================================
 
 USE fmds;
@@ -11,72 +13,79 @@ USE fmds;
 -- ============================================================================
 
 -- Q1-1. 거래 등록 (영업1팀 운영계좌에 식비 지출)
-INSERT INTO `거래내역` (`금액`, `카테고리`, `메모`, `거래일`, `계좌_ID`)
-VALUES (-75000.00, '식비', '카드결제 / 거래처 미팅', '2026-05-11', 1);
+INSERT INTO `거래내역` (`금액`, `메모`, `발생일`, `계좌ID`, `카테고리ID`)
+VALUES (-75000.00, '카드결제 / 거래처 미팅', '2026-05-11', 1, 1);
 
 -- Q1-2. 잘못 입력한 거래 수정 (메모만 수정)
 UPDATE `거래내역`
    SET `메모` = '카드결제 / 거래처 미팅 — 김동인'
- WHERE `거래_ID` = LAST_INSERT_ID();
+ WHERE `거래ID` = LAST_INSERT_ID();
 
 -- Q1-3. 거래 취소 (삭제)
--- DELETE FROM `거래내역` WHERE `거래_ID` = LAST_INSERT_ID();
+-- DELETE FROM `거래내역` WHERE `거래ID` = LAST_INSERT_ID();
 
 -- ============================================================================
 -- 【역할 2】 감사 담당자 — 조건별 조회 (수정 권한 없음)
 -- ============================================================================
 
 -- Q2-1. 기간별 거래 조회 (2026년 4월)
-SELECT t.`거래_ID`, t.`거래일`, t.`금액`, t.`카테고리`, t.`메모`,
+SELECT t.`거래ID`, t.`발생일`, t.`금액`, cat.`카테고리명`, t.`메모`,
        c.`계좌명`, c.`조직명`
   FROM `거래내역` t
-  JOIN `계좌`     c ON c.`계좌_ID` = t.`계좌_ID`
- WHERE t.`거래일` BETWEEN '2026-04-01' AND '2026-04-30'
- ORDER BY t.`거래일`;
+  JOIN `계좌`       c   ON c.`계좌ID`     = t.`계좌ID`
+  JOIN `카테고리`   cat ON cat.`카테고리ID` = t.`카테고리ID`
+ WHERE t.`발생일` BETWEEN '2026-04-01' AND '2026-04-30'
+ ORDER BY t.`발생일`;
 
 -- Q2-2. 카테고리별 거래 조회 (인프라 비용)
-SELECT t.`거래일`, t.`금액`, t.`메모`, c.`계좌명`, c.`조직명`
+SELECT t.`발생일`, t.`금액`, t.`메모`, c.`계좌명`, c.`조직명`
   FROM `거래내역` t
-  JOIN `계좌`     c ON c.`계좌_ID` = t.`계좌_ID`
- WHERE t.`카테고리` = '인프라'
- ORDER BY t.`거래일`;
+  JOIN `계좌`       c   ON c.`계좌ID`     = t.`계좌ID`
+  JOIN `카테고리`   cat ON cat.`카테고리ID` = t.`카테고리ID`
+ WHERE cat.`카테고리명` = '인프라'
+ ORDER BY t.`발생일`;
 
 -- Q2-3. 부서별 거래 조회 (개발팀 전체)
-SELECT t.`거래일`, t.`카테고리`, t.`금액`, c.`계좌명`
+SELECT t.`발생일`, cat.`카테고리명`, t.`금액`, c.`계좌명`
   FROM `거래내역` t
-  JOIN `계좌`     c ON c.`계좌_ID` = t.`계좌_ID`
+  JOIN `계좌`       c   ON c.`계좌ID`     = t.`계좌ID`
+  JOIN `카테고리`   cat ON cat.`카테고리ID` = t.`카테고리ID`
  WHERE c.`조직명` = '개발팀'
- ORDER BY t.`거래일` DESC;
+ ORDER BY t.`발생일` DESC;
 
 -- Q2-4. 고액 거래 조회 (50만원 초과 지출)
-SELECT t.`거래일`, c.`조직명`, c.`계좌명`, t.`카테고리`, t.`금액`, t.`메모`
+SELECT t.`발생일`, c.`조직명`, c.`계좌명`, cat.`카테고리명`, t.`금액`, t.`메모`
   FROM `거래내역` t
-  JOIN `계좌`     c ON c.`계좌_ID` = t.`계좌_ID`
+  JOIN `계좌`       c   ON c.`계좌ID`     = t.`계좌ID`
+  JOIN `카테고리`   cat ON cat.`카테고리ID` = t.`카테고리ID`
  WHERE t.`금액` < -500000
  ORDER BY t.`금액` ASC;
 
 -- ============================================================================
 -- 【역할 3】 부서장(관리자) — 예산 집행률 리포트
+-- 수립 fat 정규화 후: 예산금액·기간은 예산 JOIN, 조직책임자는 조직 JOIN.
 -- ============================================================================
 
 -- Q3-1. 부서별 Q2 예산 집행률
---   집행액 = SUM(지출 거래, 음수 합계의 절대값)
+--   집행액 = SUM(예산 카테고리에 해당하는 지출 거래, 음수 합계의 절대값)
 --   집행률 = 집행액 / 예산금액 × 100
 SELECT s.`조직명`,
-       s.`기간`,
-       s.`예산금액`                                       AS 예산,
+       b.`기간`,
+       b.`예산금액`                                       AS 예산,
        COALESCE(ABS(SUM(CASE WHEN t.`금액` < 0 THEN t.`금액` ELSE 0 END)), 0) AS 집행액,
        ROUND(
          COALESCE(ABS(SUM(CASE WHEN t.`금액` < 0 THEN t.`금액` ELSE 0 END)), 0)
-         / s.`예산금액` * 100, 1
+         / b.`예산금액` * 100, 1
        )                                                  AS `집행률(%)`
-  FROM `수립` s
-  JOIN `계좌`    c ON c.`조직명` = s.`조직명`
+  FROM `수립`     s
+  JOIN `예산`     b ON b.`예산ID` = s.`예산ID`
+  JOIN `계좌`     c ON c.`조직명` = s.`조직명`
   LEFT JOIN `거래내역` t
-         ON t.`계좌_ID` = c.`계좌_ID`
-        AND t.`거래일` BETWEEN '2026-04-01' AND '2026-06-30'  -- Q2 = 4~6월
- WHERE s.`기간` = '2026-Q2'
- GROUP BY s.`조직명`, s.`기간`, s.`예산금액`
+         ON t.`계좌ID`     = c.`계좌ID`
+        AND t.`카테고리ID` = b.`카테고리ID`
+        AND t.`발생일` BETWEEN '2026-04-01' AND '2026-06-30'  -- Q2 = 4~6월
+ WHERE b.`기간` = '2026-Q2'
+ GROUP BY s.`조직명`, b.`기간`, b.`예산금액`
  ORDER BY `집행률(%)` DESC;
 
 -- Q3-2. 예산 초과 위험 부서 (집행률 70% 이상)
@@ -86,15 +95,17 @@ SELECT 조직명, `집행률(%)`
     SELECT s.`조직명`,
            ROUND(
              COALESCE(ABS(SUM(CASE WHEN t.`금액` < 0 THEN t.`금액` ELSE 0 END)), 0)
-             / s.`예산금액` * 100, 1
+             / b.`예산금액` * 100, 1
            ) AS `집행률(%)`
-      FROM `수립` s
-      JOIN `계좌`    c ON c.`조직명` = s.`조직명`
+      FROM `수립`     s
+      JOIN `예산`     b ON b.`예산ID` = s.`예산ID`
+      JOIN `계좌`     c ON c.`조직명` = s.`조직명`
       LEFT JOIN `거래내역` t
-             ON t.`계좌_ID` = c.`계좌_ID`
-            AND t.`거래일` BETWEEN '2026-04-01' AND '2026-06-30'
-     WHERE s.`기간` = '2026-Q2'
-     GROUP BY s.`조직명`, s.`예산금액`
+             ON t.`계좌ID`     = c.`계좌ID`
+            AND t.`카테고리ID` = b.`카테고리ID`
+            AND t.`발생일` BETWEEN '2026-04-01' AND '2026-06-30'
+     WHERE b.`기간` = '2026-Q2'
+     GROUP BY s.`조직명`, b.`예산금액`
   ) AS x
  WHERE `집행률(%)` >= 70
  ORDER BY `집행률(%)` DESC;
@@ -105,32 +116,33 @@ SELECT 조직명, `집행률(%)`
 
 -- Q4-1. 부서별·카테고리별 지출 합계
 SELECT c.`조직명`,
-       t.`카테고리`,
-       COUNT(*)            AS 건수,
-       SUM(t.`금액`)        AS 합계,
+       cat.`카테고리명`,
+       COUNT(*)                AS 건수,
+       SUM(t.`금액`)            AS 합계,
        ROUND(AVG(t.`금액`), 0) AS 평균
   FROM `거래내역` t
-  JOIN `계좌`    c ON c.`계좌_ID` = t.`계좌_ID`
+  JOIN `계좌`       c   ON c.`계좌ID`     = t.`계좌ID`
+  JOIN `카테고리`   cat ON cat.`카테고리ID` = t.`카테고리ID`
  WHERE t.`금액` < 0
- GROUP BY c.`조직명`, t.`카테고리`
+ GROUP BY c.`조직명`, cat.`카테고리명`
  ORDER BY c.`조직명`, 합계 ASC;
 
 -- Q4-2. 월별 수입·지출 추이
-SELECT DATE_FORMAT(t.`거래일`, '%Y-%m') AS 월,
+SELECT DATE_FORMAT(t.`발생일`, '%Y-%m') AS 월,
        SUM(CASE WHEN t.`금액` > 0 THEN t.`금액` ELSE 0 END) AS 수입,
        SUM(CASE WHEN t.`금액` < 0 THEN t.`금액` ELSE 0 END) AS 지출,
        SUM(t.`금액`)                                       AS 순증감
   FROM `거래내역` t
- GROUP BY DATE_FORMAT(t.`거래일`, '%Y-%m')
+ GROUP BY DATE_FORMAT(t.`발생일`, '%Y-%m')
  ORDER BY 월;
 
 -- Q4-3. 계좌별 잔액 + 거래건수 (대시보드)
 SELECT c.`계좌명`, c.`조직명`, c.`잔액`,
-       COUNT(t.`거래_ID`)              AS 거래건수,
-       MAX(t.`거래일`)                  AS 최근거래일
+       COUNT(t.`거래ID`)              AS 거래건수,
+       MAX(t.`발생일`)                AS 최근거래일
   FROM `계좌`     c
-  LEFT JOIN `거래내역` t ON t.`계좌_ID` = c.`계좌_ID`
- GROUP BY c.`계좌_ID`, c.`계좌명`, c.`조직명`, c.`잔액`
+  LEFT JOIN `거래내역` t ON t.`계좌ID` = c.`계좌ID`
+ GROUP BY c.`계좌ID`, c.`계좌명`, c.`조직명`, c.`잔액`
  ORDER BY c.`잔액` DESC;
 
 -- Q4-4. 조직별 목표 + 예산 종합 뷰
@@ -139,7 +151,43 @@ SELECT o.`조직명`, o.`조직책임자`,
        SUM(DISTINCT b.`예산금액`)                          AS Q2_Q3_예산합계
   FROM `조직` o
   LEFT JOIN `설정` sg ON sg.`조직명` = o.`조직명`
-  LEFT JOIN `목표` g  ON g.`목표_ID` = sg.`목표_ID`
+  LEFT JOIN `목표` g  ON g.`목표ID` = sg.`목표ID`
   LEFT JOIN `수립` sb ON sb.`조직명` = o.`조직명`
   LEFT JOIN `예산` b  ON b.`예산ID` = sb.`예산ID`
  GROUP BY o.`조직명`, o.`조직책임자`;
+
+-- ============================================================================
+-- 정정 신규 쿼리 (자기참조 / 다중값 / 기준 관계 활용)
+-- ============================================================================
+
+-- Q5-1. 부서장(상사ID=NULL)별 직속 부하 목록 (자기참조)
+SELECT boss.`사원명` AS 부서장,
+       boss.`조직명`,
+       COUNT(sub.`사원ID`)                    AS 직속부하수,
+       GROUP_CONCAT(sub.`사원명` SEPARATOR ', ') AS 부하목록
+  FROM `사원` boss
+  LEFT JOIN `사원` sub ON sub.`상사ID` = boss.`사원ID`
+ WHERE boss.`상사ID` IS NULL
+ GROUP BY boss.`사원ID`, boss.`사원명`, boss.`조직명`
+ ORDER BY boss.`조직명`;
+
+-- Q5-2. 사원별 등록 전화번호 수 + 목록 (다중값)
+SELECT e.`사원명`, e.`조직명`,
+       COUNT(p.`전화번호`)                                AS 연락처수,
+       GROUP_CONCAT(CONCAT(p.`종류`, ':', p.`전화번호`) SEPARATOR ' / ') AS 연락처목록
+  FROM `사원` e
+  LEFT JOIN `사원_전화번호` p ON p.`사원ID` = e.`사원ID`
+ GROUP BY e.`사원ID`, e.`사원명`, e.`조직명`
+ ORDER BY 연락처수 DESC, e.`사원명`;
+
+-- Q5-3. 카테고리별 예산 vs 실제 집행 비교 (기준 관계)
+SELECT cat.`카테고리명`,
+       cat.`구분`,
+       COALESCE(SUM(DISTINCT b.`예산금액`), 0) AS 총예산,
+       COALESCE(ABS(SUM(CASE WHEN t.`금액` < 0 THEN t.`금액` ELSE 0 END)), 0) AS 총지출,
+       COUNT(DISTINCT t.`거래ID`)              AS 거래수
+  FROM `카테고리` cat
+  LEFT JOIN `예산`     b ON b.`카테고리ID` = cat.`카테고리ID`
+  LEFT JOIN `거래내역` t ON t.`카테고리ID` = cat.`카테고리ID`
+ GROUP BY cat.`카테고리ID`, cat.`카테고리명`, cat.`구분`
+ ORDER BY cat.`구분`, cat.`카테고리명`;
