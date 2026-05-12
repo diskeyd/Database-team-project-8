@@ -96,7 +96,7 @@ GRANT SELECT ON `fmds`.`계좌`               TO '감사자'@'localhost';
 GRANT SELECT ON `fmds`.`조직`               TO '감사자'@'localhost';
 GRANT SELECT ON `fmds`.`카테고리`           TO '감사자'@'localhost';
 GRANT SELECT ON `fmds`.`사원`               TO '감사자'@'localhost';
-GRANT SELECT ON `fmds`.`사원_전화번호`      TO '감사자'@'localhost';
+GRANT SELECT ON `fmds`.`조직_전화번호`      TO '감사자'@'localhost';
 
 -- 【부서장】 집행 현황 뷰 + 부서 요약 뷰만 (개별 거래 메모 등 미열람)
 GRANT SELECT ON `fmds`.`v_예산_집행현황`   TO '부서장'@'localhost';
