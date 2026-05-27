@@ -79,19 +79,19 @@ CREATE TABLE `조직_전화번호` (
 
 -- ─────────────────────────────────────────────────────────────────────────────
 -- 6. 계좌
---    조직 소유 계좌. 약한 개체(소유 식별 관계)이나 MySQL 구현 편의상
---    대리 기본키(계좌ID) 채택. 조직명 외래키로 식별 관계 의미 보존.
+--    조직 소유 계좌. 약한 개체(소유 식별 관계). 11-1주차 매핑 규칙 4에 따라
+--    부모(조직)의 기본키 + 부분키(계좌ID)를 결합한 기본키 채택.
 -- ─────────────────────────────────────────────────────────────────────────────
 CREATE TABLE `계좌` (
-	`계좌ID`         INT          NOT NULL AUTO_INCREMENT,
+	`조직명`         VARCHAR(50)  NOT NULL,
+	`계좌ID`         INT          NOT NULL COMMENT '부분키 (조직 scope)',
 	`계좌번호`       VARCHAR(30)  NOT NULL UNIQUE,
 	`계좌명`         VARCHAR(50)  NOT NULL,
 	`잔액`           DECIMAL(15,2) NOT NULL DEFAULT 0,
 	`생성일`         DATE         NOT NULL,
-	`조직명`         VARCHAR(50)  NOT NULL,
-	PRIMARY KEY (`계좌ID`),
+	PRIMARY KEY (`조직명`, `계좌ID`),
 	FOREIGN KEY (`조직명`) REFERENCES `조직`(`조직명`)
-		ON UPDATE CASCADE ON DELETE RESTRICT,
+		ON UPDATE CASCADE ON DELETE CASCADE,
 	CONSTRAINT `chk_계좌_잔액` CHECK (`잔액` >= 0)
 ) ENGINE=InnoDB;
 
@@ -112,25 +112,25 @@ CREATE TABLE `예산` (
 
 -- ─────────────────────────────────────────────────────────────────────────────
 -- 8. 거래내역
---    계좌별 거래. 약한 개체(발생 식별 관계)이나 MySQL 구현 편의상
---    대리 기본키(거래ID) 채택. 계좌ID NOT NULL 외래키로 식별 관계 의미 보존.
+--    계좌별 거래. 약한 개체(발생 식별 관계). 11-1주차 매핑 규칙 4에 따라
+--    부모(계좌)의 결합 기본키 (조직명, 계좌ID) + 부분키(거래ID)를 결합한 기본키 채택.
 --    발생일은 발생 관계 속성(기존 거래일·기록일 통합),
 --    카테고리ID는 분류 관계 외래키.
 -- ─────────────────────────────────────────────────────────────────────────────
 CREATE TABLE `거래내역` (
-	`거래ID`         INT          NOT NULL AUTO_INCREMENT,
+	`조직명`         VARCHAR(50)  NOT NULL,
+	`계좌ID`         INT          NOT NULL,
+	`거래ID`         INT          NOT NULL COMMENT '부분키 (계좌 scope)',
 	`금액`           DECIMAL(15,2) NOT NULL,
 	`메모`           VARCHAR(200),
 	`발생일`         DATE         NOT NULL COMMENT '관계 속성: 계좌-거래내역 발생일',
-	`계좌ID`         INT          NOT NULL,
 	`카테고리ID`     INT          NOT NULL,
-	PRIMARY KEY (`거래ID`),
-	FOREIGN KEY (`계좌ID`)     REFERENCES `계좌`(`계좌ID`)
-		ON UPDATE CASCADE ON DELETE RESTRICT,
+	PRIMARY KEY (`조직명`, `계좌ID`, `거래ID`),
+	FOREIGN KEY (`조직명`, `계좌ID`) REFERENCES `계좌`(`조직명`, `계좌ID`)
+		ON UPDATE CASCADE ON DELETE CASCADE,
 	FOREIGN KEY (`카테고리ID`) REFERENCES `카테고리`(`카테고리ID`)
 		ON UPDATE CASCADE ON DELETE RESTRICT,
 	INDEX `idx_거래내역_발생일` (`발생일`),
-	INDEX `idx_거래내역_계좌_발생일` (`계좌ID`, `발생일`),
 	INDEX `idx_거래내역_카테고리` (`카테고리ID`),
 	-- 카테고리ID 범위로 부호 정합성 강제: 1-5/7-12=지출(<0), 6/13=수입(>0), 14=이체(부호 무관)
 	CONSTRAINT `chk_거래내역_정합` CHECK (
@@ -178,13 +178,14 @@ CREATE TABLE `수립` (
 DROP VIEW IF EXISTS `vw_계좌_거래수`;
 CREATE VIEW `vw_계좌_거래수` AS
 SELECT
+	c.`조직명`,
 	c.`계좌ID`,
 	c.`계좌번호`,
 	c.`계좌명`,
 	c.`잔액`,
 	c.`생성일`,
-	c.`조직명`,
-	(SELECT COUNT(*) FROM `거래내역` t WHERE t.`계좌ID` = c.`계좌ID`) AS `거래수`
+	(SELECT COUNT(*) FROM `거래내역` t
+	 WHERE t.`조직명` = c.`조직명` AND t.`계좌ID` = c.`계좌ID`) AS `거래수`
 FROM `계좌` c;
 
 -- ─────────────────────────────────────────────────────────────────────────────
