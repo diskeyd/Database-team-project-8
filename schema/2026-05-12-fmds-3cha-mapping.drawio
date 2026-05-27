@@ -1,0 +1,439 @@
+<mxfile host="app.diagrams.net" agent="manual" version="22.0.0">
+  <diagram name="FMDS-3차-매핑" id="fmds3map">
+    <mxGraphModel dx="1800" dy="1100" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ============ TITLE ============ -->
+        <mxCell id="title" value="FMDS 3차 과제 - ER → 릴레이션 스키마 매핑 (11-1주차 규칙 적용)" style="text;html=1;fontSize=16;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="120" y="20" width="1360" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" value="규칙1 개체→릴레이션 · 규칙2 M:N→독립 릴레이션 · 규칙3 1:N→N측 흡수 · 규칙4 약한개체 결합키 · 규칙5 다중값→독립 릴레이션" style="text;html=1;fontSize=11;align=center;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="120" y="50" width="1360" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- ============ COLUMN HEADER ============ -->
+        <mxCell id="hdr_no" value="#" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="80" y="90" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_rel" value="릴레이션" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="120" y="90" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_attr" value="속성 (밑줄 = Primary Key, 점선 밑줄 = 부분키, 색깔 화살표 = Foreign Key → 원조 Primary Key)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="250" y="90" width="1230" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- 1. 조직 (parent — all FKs target 조직명) -->
+        <!-- ============================================================ -->
+        <mxCell id="r1_no" value="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="80" y="120" width="40" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="r1_name" value="조직" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="120" y="120" width="130" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="org_pk" value="&lt;u&gt;조직명&lt;/u&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;strokeWidth=2;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="250" y="120" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="org_kind" value="조직종류" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="410" y="120" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="org_lead" value="조직책임자" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="570" y="120" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="r1_note" value="규칙1: 강한 개체 → 독립 릴레이션" style="text;html=1;fontSize=10;fontColor=#666666;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="740" y="135" width="300" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- 2. 사원 (Foreign Key: 조직명→조직, 상사ID→사원 자기참조) -->
+        <!-- ============================================================ -->
+        <mxCell id="r2_no" value="2" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="80" y="180" width="40" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="r2_name" value="사원" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="120" y="180" width="130" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="emp_pk" value="&lt;u&gt;사원ID&lt;/u&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;strokeWidth=2;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="250" y="180" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="emp_name" value="사원명" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="390" y="180" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="emp_org_fk" value="조직명 (Foreign Key)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=center;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="510" y="180" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="emp_super_fk" value="상사ID (Foreign Key)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;align=center;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="650" y="180" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="r2_note" value="규칙3: 소속(1:N) N측 흡수 + 관리(자기참조 1:N)" style="text;html=1;fontSize=10;fontColor=#666666;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="800" y="195" width="320" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- 3. 조직_전화번호 (다중값 분리: 대표/직통/팩스 등) -->
+        <!-- ============================================================ -->
+        <mxCell id="r3_no" value="3" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="80" y="240" width="40" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="r3_name" value="조직_전화번호" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="120" y="240" width="130" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ophone_org_fk" value="&lt;u&gt;조직명&lt;/u&gt; (Primary Key,Foreign Key)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=center;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="250" y="240" width="180" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ophone_num" value="&lt;u&gt;전화번호&lt;/u&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="430" y="240" width="180" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="r3_note" value="규칙5: 다중값(조직전화번호 - 대표/직통/팩스) → 독립 릴레이션 + 결합키" style="text;html=1;fontSize=10;fontColor=#666666;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="630" y="255" width="450" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- 4. 카테고리 -->
+        <!-- ============================================================ -->
+        <mxCell id="r4_no" value="4" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="80" y="300" width="40" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="r4_name" value="카테고리" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="120" y="300" width="130" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cat_pk" value="&lt;u&gt;카테고리ID&lt;/u&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9673a6;strokeWidth=2;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="250" y="300" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cat_name" value="카테고리명" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="410" y="300" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cat_kind" value="구분" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="570" y="300" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="r4_note" value="규칙1: 강한 개체 → 독립 릴레이션" style="text;html=1;fontSize=10;fontColor=#666666;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="740" y="315" width="300" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- 5. 계좌 (약한 개체 — 결합키: 조직명 + 계좌ID) -->
+        <!-- ============================================================ -->
+        <mxCell id="r5_no" value="5" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="80" y="360" width="40" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="r5_name" value="계좌&lt;br/&gt;&lt;span style=&quot;font-size:9px;font-weight:normal;&quot;&gt;(약한 개체)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=2;fontSize=12;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="120" y="360" width="130" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="acc_org_fk" value="&lt;u&gt;조직명&lt;/u&gt; (Primary Key,Foreign Key)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=center;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="250" y="360" width="150" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="acc_pk" value="&lt;span style=&quot;border-bottom:2px dashed #000000;padding-bottom:1px;&quot;&gt;계좌ID&lt;/span&gt; (Primary Key)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d79b00;strokeWidth=2;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="400" y="360" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="acc_num" value="계좌번호" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="540" y="360" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="acc_name" value="계좌명" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="650" y="360" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="acc_bal" value="잔액" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="760" y="360" width="100" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="acc_made" value="생성일" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="860" y="360" width="100" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="r5_note" value="규칙4: 약한 개체 → 강한개체 Primary Key(조직명) + 부분키(계좌ID) 결합" style="text;html=1;fontSize=10;fontColor=#666666;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="970" y="375" width="450" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- 6. 목표 -->
+        <!-- ============================================================ -->
+        <mxCell id="r6_no" value="6" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="80" y="420" width="40" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="r6_name" value="목표" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="120" y="420" width="130" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="goal_pk" value="&lt;u&gt;목표ID&lt;/u&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;strokeWidth=2;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="250" y="420" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="goal_name" value="목표명" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="410" y="420" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="goal_due" value="달성예정일" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="570" y="420" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="r6_note" value="규칙1: 강한 개체 → 독립 릴레이션" style="text;html=1;fontSize=10;fontColor=#666666;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="740" y="435" width="300" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- 7. 예산 (Foreign Key: 카테고리ID) -->
+        <!-- ============================================================ -->
+        <mxCell id="r7_no" value="7" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="80" y="480" width="40" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="r7_name" value="예산" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="120" y="480" width="130" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="bud_pk" value="&lt;u&gt;예산ID&lt;/u&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b85450;strokeWidth=2;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="250" y="480" width="150" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="bud_cat_fk" value="카테고리ID (Foreign Key)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;align=center;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="400" y="480" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="bud_amt" value="예산금액" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="560" y="480" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="bud_term" value="기간" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="700" y="480" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="r7_note" value="규칙3: 기준(1:N) → N측(예산)이 카테고리 Primary Key 흡수" style="text;html=1;fontSize=10;fontColor=#666666;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="850" y="495" width="380" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- 8. 거래내역 (약한 개체) — 계좌 결합키(조직명·계좌ID) + 부분키(거래ID) -->
+        <!-- ============================================================ -->
+        <mxCell id="r8_no" value="8" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="80" y="540" width="40" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="r8_name" value="거래내역&lt;br/&gt;&lt;span style=&quot;font-size:9px;font-weight:normal;&quot;&gt;(약한 개체)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontSize=12;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="120" y="540" width="130" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="trx_org_fk" value="&lt;u&gt;조직명&lt;/u&gt; (Primary Key,Foreign Key)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=center;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="250" y="540" width="170" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="trx_acc_fk" value="&lt;u&gt;계좌ID&lt;/u&gt; (Primary Key,Foreign Key)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;align=center;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="420" y="540" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="trx_pk" value="&lt;span style=&quot;border-bottom:2px dashed #000000;padding-bottom:1px;&quot;&gt;거래ID&lt;/span&gt; (부분키)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;strokeWidth=2;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="580" y="540" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="trx_cat_fk" value="카테고리ID (Foreign Key)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;align=center;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="700" y="540" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="trx_amt" value="금액" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="840" y="540" width="80" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="trx_memo" value="메모" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="920" y="540" width="80" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="trx_date" value="발생일" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="540" width="100" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="r8_note" value="규칙3+4: 약한개체(거래내역) → 계좌 결합키(조직명·계좌ID) + 부분키(거래ID) · 카테고리ID FK · 발생일" style="text;html=1;fontSize=10;fontColor=#666666;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="1110" y="555" width="490" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- 9. 설정 (N:M — 조직 × 목표) -->
+        <!-- ============================================================ -->
+        <mxCell id="r9_no" value="9" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="80" y="600" width="40" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="r9_name" value="설정&lt;br/&gt;&lt;span style=&quot;font-size:9px;font-weight:normal;&quot;&gt;(N:M)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=12;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="120" y="600" width="130" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="set_org_fk" value="&lt;u&gt;조직명&lt;/u&gt; (Primary Key,Foreign Key)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=center;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="250" y="600" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="set_goal_fk" value="&lt;u&gt;목표ID&lt;/u&gt; (Primary Key,Foreign Key)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;align=center;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="450" y="600" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="r9_note" value="규칙2: M:N(설정) → 독립 릴레이션, 양측 Primary Key 결합" style="text;html=1;fontSize=10;fontColor=#666666;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="660" y="615" width="400" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- 10. 수립 (N:M — 조직 × 예산, 수립일 관계속성) -->
+        <!-- ============================================================ -->
+        <mxCell id="r10_no" value="10" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="80" y="660" width="40" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="r10_name" value="수립&lt;br/&gt;&lt;span style=&quot;font-size:9px;font-weight:normal;&quot;&gt;(N:M)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=12;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="120" y="660" width="130" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="make_org_fk" value="&lt;u&gt;조직명&lt;/u&gt; (Primary Key,Foreign Key)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=center;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="250" y="660" width="180" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="make_bud_fk" value="&lt;u&gt;예산ID&lt;/u&gt; (Primary Key,Foreign Key)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;align=center;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="430" y="660" width="180" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="make_date" value="수립일" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="610" y="660" width="150" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="r10_note" value="규칙2: M:N(수립) → 독립 릴레이션 + 관계속성(수립일)" style="text;html=1;fontSize=10;fontColor=#666666;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="770" y="675" width="400" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- ============ Foreign Key → Primary Key 화살표 (11개, 11-1 권고 ④) ============ -->
+        <!-- 색깔: 녹 #82B366 조직 · 파 #6C8EBF 사원 · 주 #D79B00 계좌 · 보 #9673A6 카테고리 · 노 #D6B656 목표 · 빨 #B85450 예산 -->
+
+        <!-- 1. 사원.조직명 → 조직.조직명 (녹) -->
+        <mxCell id="fk1" style="endArrow=block;endFill=1;html=1;strokeColor=#82B366;strokeWidth=4;endSize=16;edgeStyle=orthogonalEdgeStyle;exitX=0.15;exitY=0;exitDx=0;exitDy=0;entryX=0.15;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="emp_org_fk" target="org_pk">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 2. 사원.상사ID → 사원.사원ID (파, 자기참조 - 우측 우회 루프) -->
+        <mxCell id="fk2" style="endArrow=block;endFill=1;html=1;strokeColor=#6C8EBF;strokeWidth=4;endSize=16;edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;curved=0;" edge="1" parent="1" source="emp_super_fk" target="emp_pk">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="820" y="205" />
+              <mxPoint x="820" y="155" />
+              <mxPoint x="420" y="155" />
+              <mxPoint x="420" y="205" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk2_lbl" value="자기참조" style="text;html=1;fontSize=9;fontColor=#6C8EBF;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="750" y="140" width="60" height="15" as="geometry" />
+        </mxCell>
+
+        <!-- 3. 조직_전화번호.조직명 → 조직.조직명 (녹) -->
+        <mxCell id="fk3" style="endArrow=block;endFill=1;html=1;strokeColor=#82B366;strokeWidth=4;endSize=16;edgeStyle=orthogonalEdgeStyle;exitX=0.35;exitY=0;exitDx=0;exitDy=0;entryX=0.35;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="ophone_org_fk" target="org_pk">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 4. 계좌.조직명 → 조직.조직명 (녹) -->
+        <mxCell id="fk4" style="endArrow=block;endFill=1;html=1;strokeColor=#82B366;strokeWidth=4;endSize=16;edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="acc_org_fk" target="org_pk">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 5. 거래내역.(조직명,계좌ID) → 계좌.(조직명,계좌ID) (주) — 결합 식별 FK 1개 (대표 화살표) -->
+
+        <mxCell id="fk5" style="endArrow=block;endFill=1;html=1;strokeColor=#D79B00;strokeWidth=4;endSize=16;edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="trx_acc_fk" target="acc_pk">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 12번 (거래내역.조직명 → 조직.조직명) 화살표 제거됨 — fk5(거래내역.계좌ID → 계좌.계좌ID)와 함께 (조직명,계좌ID) 결합 식별 FK 1개로 통합 -->
+
+        <!-- 6. 거래내역.카테고리ID → 카테고리.카테고리ID (보) -->
+        <mxCell id="fk6" style="endArrow=block;endFill=1;html=1;strokeColor=#9673A6;strokeWidth=4;endSize=16;edgeStyle=orthogonalEdgeStyle;exitX=0.7;exitY=0;exitDx=0;exitDy=0;entryX=0.7;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="trx_cat_fk" target="cat_pk">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 7. 예산.카테고리ID → 카테고리.카테고리ID (보) -->
+        <mxCell id="fk7" style="endArrow=block;endFill=1;html=1;strokeColor=#9673A6;strokeWidth=4;endSize=16;edgeStyle=orthogonalEdgeStyle;exitX=0.3;exitY=0;exitDx=0;exitDy=0;entryX=0.3;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="bud_cat_fk" target="cat_pk">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 8. 설정.조직명 → 조직.조직명 (녹) -->
+        <mxCell id="fk8" style="endArrow=block;endFill=1;html=1;strokeColor=#82B366;strokeWidth=4;endSize=16;edgeStyle=orthogonalEdgeStyle;exitX=0.65;exitY=0;exitDx=0;exitDy=0;entryX=0.65;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="set_org_fk" target="org_pk">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 9. 설정.목표ID → 목표.목표ID (노) -->
+        <mxCell id="fk9" style="endArrow=block;endFill=1;html=1;strokeColor=#D6B656;strokeWidth=4;endSize=16;edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="set_goal_fk" target="goal_pk">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 10. 수립.조직명 → 조직.조직명 (녹) -->
+        <mxCell id="fk10" style="endArrow=block;endFill=1;html=1;strokeColor=#82B366;strokeWidth=4;endSize=16;edgeStyle=orthogonalEdgeStyle;exitX=0.85;exitY=0;exitDx=0;exitDy=0;entryX=0.85;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="make_org_fk" target="org_pk">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 11. 수립.예산ID → 예산.예산ID (빨) -->
+        <mxCell id="fk11" style="endArrow=block;endFill=1;html=1;strokeColor=#B85450;strokeWidth=4;endSize=16;edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="make_bud_fk" target="bud_pk">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ============ LEGEND ============ -->
+        <mxCell id="lgd_title" value="범례" style="text;html=1;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="760" width="100" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- 키 표시 범례 -->
+        <mxCell id="lgd_pk_box" value="&lt;u&gt;속성명&lt;/u&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=2;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="80" y="790" width="100" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="lgd_pk_txt" value="= 기본 키 (Primary Key) — 실선 밑줄" style="text;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="185" y="795" width="220" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lgd_part_box" value="&lt;span style=&quot;border-bottom:2px dashed #000000;padding-bottom:1px;&quot;&gt;속성명&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d79b00;strokeWidth=2;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="80" y="825" width="100" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="lgd_part_txt" value="= 부분키 (약한 개체) — 점선 밑줄 / 계좌ID" style="text;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="185" y="830" width="320" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lgd_fk_box" value="속성명 (Foreign Key)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;align=center;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="80" y="860" width="100" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="lgd_fk_txt" value="= 외래 키 (Foreign Key) — 색깔 = 원조 Primary Key 색상" style="text;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="185" y="865" width="320" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- 색깔 매핑 범례 -->
+        <mxCell id="lgd_color_title" value="Foreign Key 색깔 → 원조 Primary Key 매핑" style="text;html=1;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="540" y="760" width="280" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lgd_c1_swatch" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="540" y="790" width="20" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="lgd_c1_txt" value="녹색 = 조직.조직명 참조 (사원/조직_전화번호/계좌/설정/수립)" style="text;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="565" y="790" width="350" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lgd_c2_swatch" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="540" y="815" width="20" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="lgd_c2_txt" value="파랑 = 사원.사원ID 참조 (사원 자기참조 상사ID)" style="text;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="565" y="815" width="450" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lgd_c3_swatch" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="540" y="840" width="20" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="lgd_c3_txt" value="주황 = 계좌.(조직명, 계좌ID) 결합 참조 (거래내역, 식별 FK)" style="text;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="565" y="840" width="350" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lgd_c4_swatch" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="540" y="865" width="20" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="lgd_c4_txt" value="보라 = 카테고리.카테고리ID 참조 (예산/거래내역)" style="text;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="565" y="865" width="350" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lgd_c5_swatch" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="540" y="890" width="20" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="lgd_c5_txt" value="노랑 = 목표.목표ID 참조 (설정)" style="text;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="565" y="890" width="350" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lgd_c6_swatch" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="540" y="915" width="20" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="lgd_c6_txt" value="빨강 = 예산.예산ID 참조 (수립)" style="text;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="565" y="915" width="350" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- 매핑 규칙 요약 -->
+        <mxCell id="lgd_rule_title" value="적용 규칙 요약 (11-1주차)" style="text;html=1;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="760" width="280" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="lgd_r1" value="규칙1 (개체→릴레이션): 조직 · 사원 · 카테고리 · 목표 · 예산" style="text;html=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="790" width="500" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="lgd_r2" value="규칙2 (M:N→독립 릴레이션): 설정 · 수립 (양측 Primary Key 결합 → 합성 Primary Key)" style="text;html=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="810" width="500" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="lgd_r3" value="규칙3 (1:N→N측 흡수): 소속 · 분류 · 기준 · 관리(자기참조) — 관계 사라짐, Foreign Key + 관계속성만 흡수" style="text;html=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="830" width="540" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="lgd_r4" value="규칙4 (약한 개체): 계좌(부모=조직), 거래내역(부모=계좌) — 부모 Primary Key + 자기 부분키 결합" style="text;html=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="850" width="500" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="lgd_r5" value="규칙5 (다중값→독립 릴레이션): 조직_전화번호 — 부모 Primary Key(조직명) + 자기 값 결합" style="text;html=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="870" width="500" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="lgd_total" value="합계: 7 개체 + 다중값1 + N:M 2개 = 10개 릴레이션 / Foreign Key 11개 (사원 2 · 조직_전화번호 1 · 계좌 1 · 거래내역 2 [결합1+카테고리1] · 예산 1 · 설정 2 · 수립 2)" style="text;html=1;fontSize=10;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="895" width="540" height="35" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
