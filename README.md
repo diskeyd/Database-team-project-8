@@ -60,6 +60,7 @@
 - **피벗 (2026-04-01)**: 교수 피드백 반영 — 타겟을 **개인/단체 → 회사 부서별 관리**로 전환, ER 다이어그램 전면 재설계
 - **2026-05-09~11**: 관계 스키마 매핑 완료, MySQL 구현(DDL/DML/DCL/트랜잭션) 작성
 - **2026-05-12 (정정)**: 11-1주차 매핑 강의 + 6-1주차 피드백 정정 사항 일괄 반영 — 카테고리 정규화, 사원 자기참조·다중값 분리, 수립 fat 컬럼 제거, 발생일·수립일 관계 속성 신설
+- **2026-05-27 (4차 점검)**: 거래수 명칭 정정 (계좌수 → 거래수, 5/20 정정 누락 마무리) + 약한 개체 결합 PK 일관 적용 (계좌 PK = (조직명, 계좌ID), 거래내역 PK = (조직명, 계좌ID, 거래ID)) + 거래내역 CHECK 제약 추가 (카테고리ID 범위 ↔ 금액 부호 정합). 외래키 12 → 11 (거래내역의 결합 식별 FK 1개로 통합)
 
 ## SQL 구현
 
@@ -67,8 +68,8 @@ MySQL 8.x / MariaDB 10.x 기반. 자세한 실행 방법은 [`sql/README.md`](sq
 
 | 파일 | 내용 |
 |---|---|
-| [`sql/01-schema.sql`](sql/01-schema.sql) | 테이블 10개 DDL, 외래키 11개·CHECK·INDEX |
-| [`sql/02-sample-data.sql`](sql/02-sample-data.sql) | 시연용 INSERT (조직 3, 카테고리 14, 사원 8 + 자기참조, 조직_전화번호 8, 계좌 6, 목표 4, 예산 6, 거래 29, 설정 5, 수립 6) |
+| [`sql/01-schema.sql`](sql/01-schema.sql) | 테이블 10개 DDL, 약한 개체 결합 PK (계좌·거래내역), 외래키 11개 (결합 식별 FK 포함), CHECK·INDEX, `vw_계좌_거래수` view |
+| [`sql/02-sample-data.sql`](sql/02-sample-data.sql) | 시연용 INSERT (조직 5, 카테고리 14, 사원 10 + 자기참조, 조직_전화번호 10, 계좌 8, 목표 5, 예산 6, 거래내역 31, 설정 6, 수립 6) |
 | [`sql/03-queries.sql`](sql/03-queries.sql) | 역할별 4개 시나리오 + 자기참조·다중값·기준 관계 활용 쿼리 |
 | [`sql/04-views-grants.sql`](sql/04-views-grants.sql) | VIEW 3개 + 역할별 USER + GRANT |
 | [`sql/05-transactions.sql`](sql/05-transactions.sql) | 이체 트랜잭션, FOR UPDATE 락, 격리수준, 트리거 |
