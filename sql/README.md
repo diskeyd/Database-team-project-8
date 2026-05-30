@@ -7,7 +7,7 @@
 | 파일 | 내용 |
 |---|---|
 | `01-schema.sql` | DDL — 테이블 10개 생성, 기본키·외래키 11개·CHECK·INDEX |
-| `02-sample-data.sql` | INSERT — 시연용 더미 데이터 (조직 3, 카테고리 14, 사원 8 + 자기참조, 조직_전화번호 8, 계좌 6, 목표 4, 예산 6, 거래 29, 설정 5, 수립 6) |
+| `02-sample-data.sql` | INSERT — 시연용 더미 데이터 (조직 5, 카테고리 14, 사원 10 + 자기참조, 조직_전화번호 10, 계좌 8, 목표 5, 예산 6, 거래 31, 설정 6, 수립 6) |
 | `03-queries.sql` | DML — 4개 역할 시나리오 + 자기참조·다중값·기준 활용 쿼리 |
 | `04-views-grants.sql` | DCL — VIEW 3개 + USER 3명 + GRANT (회계/감사/부서장 권한 분리) |
 | `05-transactions.sql` | 트랜잭션 — 계좌 이체, ROLLBACK, FOR UPDATE 락, 격리수준, 트리거 |
@@ -46,8 +46,9 @@ SOURCE 05-transactions.sql;
 # 회계자: INSERT 가능
 mysql -u 회계자 -p
 # 비밀번호: DemoAcct!2026
-INSERT INTO fmds.`거래내역` (`금액`, `메모`, `발생일`, `계좌ID`, `카테고리ID`)
-  VALUES (-10000, '권한 테스트', CURDATE(), 1, 1);  -- ✅ 성공
+INSERT INTO fmds.`거래내역` (`조직명`, `계좌ID`, `거래ID`, `금액`, `메모`, `발생일`, `카테고리ID`)
+  SELECT '영업1팀', 1, COALESCE(MAX(`거래ID`), 0) + 1, -10000, '권한 테스트', CURDATE(), 1
+    FROM fmds.`거래내역` WHERE `조직명` = '영업1팀' AND `계좌ID` = 1;  -- ✅ 성공
 
 # 감사자: SELECT만 가능
 mysql -u 감사자 -p
@@ -114,9 +115,9 @@ SELECT * FROM fmds.`거래내역`;                            -- ❌ ERROR 1142
 - [ ] 테이블 10개 생성 (`SHOW TABLES`)
 - [ ] 외래키 11개 정상 등록 (`information_schema.KEY_COLUMN_USAGE` 조회)
 - [ ] 카테고리 마스터 14건
-- [ ] 사원 8명 (부장 3명 상사ID NULL, 팀원 5명 부장ID 참조)
-- [ ] 조직_전화번호 8건 (조직당 2~3건: 대표/직통/팩스)
-- [ ] 거래내역 29건, 발생일 컬럼만 존재
+- [ ] 사원 10명 (팀장 5명 상사ID NULL, 팀원 5명 팀장ID 참조)
+- [ ] 조직_전화번호 10건 (조직당 2~3건: 대표/직통/팩스)
+- [ ] 거래내역 31건, 발생일 컬럼만 존재
 - [ ] 예산 6건, 카테고리ID 외래키 매핑
 - [ ] 수립 6건, fat 컬럼 제거 + 수립일 채워짐
 - [ ] 뷰 3개 SELECT 가능
