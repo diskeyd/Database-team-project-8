@@ -80,18 +80,23 @@ MySQL 8.x / MariaDB 10.x 기반. 자세한 실행 방법은 [`sql/README.md`](sq
 .
 ├── README.md
 ├── docs/
-│   ├── 00-초안.pdf                          # 초기 설계 (히스토리)
+│   ├── 00-초안.pdf                               # 초기 설계 (히스토리)
 │   ├── 01-1차과제-아이디어계획서.pdf
 │   ├── 02-2차과제-ERD.pdf
 │   ├── 02-2차과제-ERD-diagram.pdf
-│   └── 03-3차과제-릴레이션스키마.pdf
+│   ├── 03-3차과제-릴레이션스키마.pdf
+│   ├── 04-최종보고서.md                           # 최종 제안서 (전체 보고서)
+│   ├── 2026-05-12-fmds-3cha-erd.drawio          # ER 다이어그램 소스
+│   └── 2026-05-12-fmds-3cha-mapping.drawio      # 관계 스키마 매핑도 소스
 ├── schema/
-│   └── fmds.dbml.md                         # 초기 DBML (1차 히스토리)
+│   └── fmds.dbml.md                              # 초기 DBML (1차 히스토리)
 └── sql/
-    ├── README.md                            # SQL 실행 가이드 + 정정 사항
-    ├── 01-schema.sql                        # DDL (10테이블/11외래키)
-    ├── 02-sample-data.sql                   # 샘플 데이터 INSERT
-    ├── 03-queries.sql                       # 역할별 DML + 분석
-    ├── 04-views-grants.sql                  # VIEW + GRANT
-    └── 05-transactions.sql                  # 트랜잭션·동시성
+    ├── README.md                                 # SQL 실행 가이드 + 정정 사항
+    ├── 01-schema.sql
+    ├── 02-sample-data.sql
+    ├── 03-queries.sql
+    ├── 04-views-grants.sql
+    └── 05-transactions.sql
 ```
+
+> **`.drawio` 파일 열기**: [app.diagrams.net](https://app.diagrams.net/) → File → Open from Device → `.drawio` 파일 선택
